@@ -1,13 +1,12 @@
 import {
   AmplifyAppSyncSimulator,
   addDataLoader,
-} from 'amplify-appsync-simulator';
+} from '@aws-amplify/amplify-appsync-simulator';
 import { inspect } from 'util';
 import { defaults, get, merge, reduce } from 'lodash';
 import NodeEvaluator from 'cfn-resolver-lib';
 import getAppSyncConfig from './getAppSyncConfig';
 import NotImplementedDataLoader from './data-loaders/NotImplementedDataLoader';
-import ElasticDataLoader from './data-loaders/ElasticDataLoader';
 import HttpDataLoader from './data-loaders/HttpDataLoader';
 import RelationalDataLoader from './data-loaders/RelationalDataLoader';
 import watchman from 'fb-watchman';
@@ -27,7 +26,6 @@ class ServerlessAppSyncSimulator {
     this.simulators = null;
 
     addDataLoader('HTTP', HttpDataLoader);
-    addDataLoader('AMAZON_ELASTICSEARCH', ElasticDataLoader);
     addDataLoader('RELATIONAL_DATABASE', RelationalDataLoader);
 
     this.hooks = {
@@ -298,6 +296,7 @@ class ServerlessAppSyncSimulator {
     const node = {
       ...this.serverless.service.resources,
       toBeResolved,
+      Parameters: {},
     };
     const evaluator = new NodeEvaluator(node, this.resourceResolvers);
     const result = evaluator.evaluateNodes();
